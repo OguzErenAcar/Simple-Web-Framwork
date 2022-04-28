@@ -1,1 +1,1 @@
-deneme
+dene 
