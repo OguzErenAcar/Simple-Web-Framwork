@@ -6,8 +6,8 @@ package odev3;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 import static spark.Spark.get;
-import static spark.Spark.post;
-
+import static spark.Spark.post; 
+import static spark.Spark.port;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,8 @@ public class App {
 
         Logger logger = LogManager.getLogger(App.class);
         logger.error("message");
-
+        int port = Integer.parseInt(System.getenv("PORT"));
+        port(port);
         get("/compute",
                 (rq, rs) -> {
                     Map<String, String> map = new HashMap<String, String>();
