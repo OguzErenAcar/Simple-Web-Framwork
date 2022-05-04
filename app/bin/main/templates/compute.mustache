@@ -1,11 +1,36 @@
 <title>My Application   </title>
-<h1>Hello World <h1>
+ 
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head> 
 
-Result is   {{result}}
+<body class="bg-success">
 
- <form action ="compute" method="post">
-  <textarea  name="input1" rows="10" cols="30"> </textarea>
-  <textarea  name="input2" rows="10" cols="30"> </textarea>
-  <br> 
-  <input type="submit" >
-</form> 
+  <div class="container h-100 bg-dark m-5">
+  
+      <div class="row align-items-center h-100">
+        <div class="col-5">
+        </div>
+          <div class="col-2 mx-auto">
+            <form class=" align-items-center   d-flex" action="" method="post">
+              <div class="row m-auto">
+              {{result2}}
+              <label for="fname" class="text-inline">Vize:</label>
+              <input name="input1" type="text" id="fname" name="fname" value="0"><br><br>
+              <label for="lname">Proje:</label>
+              <input name="input2" type="text" id="lname" name="lname" value="0"><br><br>
+              <label for="lname">Final:</label>
+              <input name="input3" type="text" id="lname" name="lname" value="0"><br><br>
+              <input class="mt-2" type="submit" value="Submit"> 
+              <input class="mt-4" name="input4" type="text" id="lname"value= {{result}}>
+              </div>
+            </form>
+          </div>
+          <div class="col-5">
+
+          </div>
+      </div>
+  </div>
+
+
+</body>

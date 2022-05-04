@@ -21,20 +21,20 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
-        get("/compute", (req, res) -> "Hello World");
+        // get("/compute", (req, res) -> "Hello World");
+
+        Logger logger = LogManager.getLogger(App.class);
+        logger.error("message");
+
+        get("/compute",
+                (rq, rs) -> {
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("result2", "Donem notu hesaplama  ");
+                    return new ModelAndView(map, "compute.mustache");
+                },
+                new MustacheTemplateEngine());
 
         /*
-         * Logger logger =LogManager.getLogger(App.class);
-         * logger.error("message");
-         * 
-         * get("/compute",
-         * (rq, rs) -> {
-         * Map<String, String> map = new HashMap<String, String>();
-         * map.put("result", "not computed yet!");
-         * return new ModelAndView(map, "compute.mustache");
-         * },
-         * new MustacheTemplateEngine());
-         * 
          * post("/compute", // url
          * (req, res) -> {
          * String input1 = req.queryParams("input1");
@@ -42,22 +42,58 @@ public class App {
          * sc1.useDelimiter("[;\r\n]+");
          * ArrayList<Integer> inputList = new ArrayList<>();
          * while (sc1.hasNext()) {
+         * 
          * int value = Integer.parseInt(sc1.next().replaceAll("\\s", ""));
          * inputList.add(value);
          * }
          * sc1.close();
          * System.out.println(inputList);
+         * //inputu alıyor ve her satırı bir indexe atadı ekrana bastırdı
          * 
          * String input2 = req.queryParams("input2").replaceAll("\\s", "");
          * int input2AsInt = Integer.parseInt(input2);
-         * 
-         * boolean result = App.search(inputList,input2AsInt);
+         * //inputu alıyor inte çevirdi
+         * boolean result = App.search(inputList, input2AsInt);
+         * //fonku çağırdı
          * Map<String, Boolean> map = new HashMap<String, Boolean>();
          * map.put("result", result);
          * return new ModelAndView(map, "compute.mustache");
+         * //sonuç sitede
          * },
          * new MustacheTemplateEngine());
          */
+
+        post("/compute", // url
+                (rq, rs) -> {
+
+                    ArrayList<String> inputList = new ArrayList<>();
+                    ArrayList<Integer> inputs = new ArrayList<>();
+
+                    String[] notlar = { "AA", "BA", "BB", "CB" ,"CC","DC","FF" };
+
+                    int i = 1;
+                    while (i < 4) {
+                        inputList.add("input" + i);
+                        System.out.println("input" + i);
+                        i = i + 1;
+                    }
+                    System.out.println("size:" + inputList.size());
+                    for (int q = 0; q < inputList.size(); q++) {
+                        String input = rq.queryParams(inputList.get(q));
+                        java.util.Scanner sc1 = new java.util.Scanner(input);
+                        String str = sc1.next();
+                        int deger = Integer.parseInt(str);
+                        inputs.add(deger);
+                        System.out.println(str);
+                        sc1.close();
+                    }
+                    String not = hesapla(notlar,inputs.get(0), inputs.get(1), inputs.get(2));
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("result", not);
+                    return new ModelAndView(map, "compute.mustache");
+                    // sonuç sitede
+                },
+                new MustacheTemplateEngine());
 
     }
 
@@ -71,5 +107,33 @@ public class App {
         }
         return false;
     }
+
+    public static String hesapla( String[] notlar, int vize, int proje, int final_) {
+
+        int not = (vize * 25 + proje * 25 + final_ * 50) / 100;
+
+        if (85 <= not && not < 100) {
+            return notlar[0];
+        } else if (75 <= not && not < 85) {
+            return notlar[1];
+        } else if (65 <= not && not < 75) {
+            return notlar[2];
+        } else if (55 <= not && not < 65) {
+            return notlar[3];
+        } else if (50 <= not && not < 55) {
+            return notlar[4];
+        } else if (40 <= not && not < 50) {
+            return notlar[5] ;
+        } else {
+            return notlar[6];
+        }
+    }
+    /*
+     * queryParams
+     * useDelimiter
+     * replaceAll
+     * Map
+     * HashMap bölerken işe yarar
+     */
 
 }
