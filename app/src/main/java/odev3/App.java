@@ -6,10 +6,11 @@ package odev3;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 import static spark.Spark.get;
-import static spark.Spark.post; 
+import static spark.Spark.post;
 import static spark.Spark.port;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,13 +21,17 @@ public class App {
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        // System.out.println(new App().getGreeting());
         // get("/compute", (req, res) -> "Hello World");
 
         Logger logger = LogManager.getLogger(App.class);
-        logger.error("message");
-        int port = Integer.parseInt(System.getenv("PORT"));
+        // logger.error("message");
+        String change_port = System.getenv("PORT");
+
+        int port = change_port != null ? Integer.parseInt(System.getenv("PORT")) : 4567;
+
         port(port);
+
         get("/compute",
                 (rq, rs) -> {
                     Map<String, String> map = new HashMap<String, String>();
@@ -35,60 +40,54 @@ public class App {
                 },
                 new MustacheTemplateEngine());
 
-        /*
-         * post("/compute", // url
-         * (req, res) -> {
-         * String input1 = req.queryParams("input1");
-         * java.util.Scanner sc1 = new java.util.Scanner(input1);
-         * sc1.useDelimiter("[;\r\n]+");
-         * ArrayList<Integer> inputList = new ArrayList<>();
-         * while (sc1.hasNext()) {
-         * 
-         * int value = Integer.parseInt(sc1.next().replaceAll("\\s", ""));
-         * inputList.add(value);
-         * }
-         * sc1.close();
-         * System.out.println(inputList);
-         * //inputu alıyor ve her satırı bir indexe atadı ekrana bastırdı
-         * 
-         * String input2 = req.queryParams("input2").replaceAll("\\s", "");
-         * int input2AsInt = Integer.parseInt(input2);
-         * //inputu alıyor inte çevirdi
-         * boolean result = App.search(inputList, input2AsInt);
-         * //fonku çağırdı
-         * Map<String, Boolean> map = new HashMap<String, Boolean>();
-         * map.put("result", result);
-         * return new ModelAndView(map, "compute.mustache");
-         * //sonuç sitede
-         * },
-         * new MustacheTemplateEngine());
-         */
-
         post("/compute", // url
                 (rq, rs) -> {
 
                     ArrayList<String> inputList = new ArrayList<>();
                     ArrayList<Integer> inputs = new ArrayList<>();
 
-                    String[] notlar = { "AA", "BA", "BB", "CB" ,"CC","DC","FF" };
+                    String[] notlar1 = { "AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF" };
+                    String[] notlar2 = { "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "F" };
+                    String[] notlar3 = { "A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3", "D", "F" };
+
+                    List<String> list = new ArrayList<String>();
+
+                    String x = rq.queryParams("harfler");
+                    System.out.println("x1 :" + x);
+                    if (x.equals("1")) {
+                        for (String i : notlar1) {
+                            list.add(i);
+
+                        }
+                        System.out.println("x" + x);
+                    } else if (x.equals("2")) {
+                        for (String i : notlar2) {
+                            list.add(i);
+                        }
+                        System.out.println("x" + x);
+                    } else if (x.equals("3")) {
+                        for (String i : notlar3) {
+                            list.add(i);
+                        }
+                        System.out.println("x" + x);
+                    }
 
                     int i = 1;
                     while (i < 4) {
                         inputList.add("input" + i);
-                        System.out.println("input" + i);
                         i = i + 1;
                     }
-                    System.out.println("size:" + inputList.size());
                     for (int q = 0; q < inputList.size(); q++) {
+
                         String input = rq.queryParams(inputList.get(q));
-                        java.util.Scanner sc1 = new java.util.Scanner(input);
-                        String str = sc1.next();
-                        int deger = Integer.parseInt(str);
+
+                        System.out.println("str:" + input);
+
+                        int deger = Integer.parseInt(input);
                         inputs.add(deger);
-                        System.out.println(str);
-                        sc1.close();
+
                     }
-                    String not = hesapla(notlar,inputs.get(0), inputs.get(1), inputs.get(2));
+                    String not = hesapla(list, inputs.get(0), inputs.get(1), inputs.get(2));
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("result", not);
                     return new ModelAndView(map, "compute.mustache");
@@ -109,32 +108,38 @@ public class App {
         return false;
     }
 
-    public static String hesapla( String[] notlar, int vize, int proje, int final_) {
+    public static String hesapla(List<String> list, int vize, int proje, int final_) {
 
         int not = (vize * 25 + proje * 25 + final_ * 50) / 100;
+        System.out.println(vize);
+        System.out.println(proje);
+        System.out.println(final_);
+        System.out.println("_____ ");
+        System.out.println(list.size());
+        if (list.size() != 0) {
+            int aralik = (int) ((100 - 40) / list.size());
+            System.out.println("aralik:" + aralik);
+            System.out.println("not:" + not);
+            if (not < 40) {
+                System.out.println("return " + list.get(list.size() - 1));
+                return list.get(list.size() - 1);
+            } 
+            else {
+                int list_index = (not - 40) / aralik;
+                System.out.println("list_index:"+list_index);
+                if (list_index >= list.size()) {
+                    System.out.println("return " + list.get(0));
+                    return list.get(0);
+                } else {
+                    System.out.println("return " + (list.size() - list_index));
+                    return list.get(list.size() - list_index - 1);
 
-        if (85 <= not && not < 100) {
-            return notlar[0];
-        } else if (75 <= not && not < 85) {
-            return notlar[1];
-        } else if (65 <= not && not < 75) {
-            return notlar[2];
-        } else if (55 <= not && not < 65) {
-            return notlar[3];
-        } else if (50 <= not && not < 55) {
-            return notlar[4];
-        } else if (40 <= not && not < 50) {
-            return notlar[5] ;
+                }
+            }
         } else {
-            return notlar[6];
+            return "null";
         }
+
     }
-    /*
-     * queryParams
-     * useDelimiter
-     * replaceAll
-     * Map
-     * HashMap bölerken işe yarar
-     */
 
 }

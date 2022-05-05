@@ -6,7 +6,11 @@ package odev3;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class AppTest {
+    String[] notlar  = { "AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF" };
     @Test
     void appHasAGreeting() {
         App classUnderTest = new App();
@@ -14,9 +18,47 @@ class AppTest {
     }
 
     @Test
-    public void test() {
-        String[] array = new String[] { "aa", "bb" };
-        assertFalse(false);
+    public void testNullArray() {
+        List<String> list = new ArrayList<String>(); 
+        assertTrue(App.hesapla(list,10,20,30 )=="null" ,"testNullArrayError");
+
+    }
+     
+    @Test
+    public void testindexOutOfbounds () {
+        List<String> list = new ArrayList<String>(); 
+        list.add("AA");
+        list.add("FF");
+        assertTrue(App.hesapla(list,100,100,100 )=="AA" ,"testindexOutOfboundsError");
+
+    }
+    @Test
+    public void testPoint () {
+        List<String> list = new ArrayList<String>(); 
+        for (String i : notlar ) {
+            list.add(i);
+        } 
+        assertFalse(App.hesapla(list,50,50,50 )=="AA" ,"testPointError");
+
+    }
+    @Test
+    public void testHighPoint () {
+      
+        List<String> list = new ArrayList<String>(); 
+        for (String i : notlar ) {
+            list.add(i);
+        } 
+        assertTrue(App.hesapla(list,100,100,100 )=="AA" ,"testHighPointError");
+
+    }
+    @Test
+    public void testLowPoint () {
+        
+        List<String> list = new ArrayList<String>(); 
+        for (String i : notlar ) {
+            list.add(i);
+        } 
+        assertTrue(App.hesapla(list,0,0,0 )=="FF" ,"testLowPointError");
 
     }
 
